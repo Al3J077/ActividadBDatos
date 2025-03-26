@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>Firebase con GitHub</title>
+</head>
+<body>
+    <h1>Conexión Firebase - GitHub</h1>
+    <button id="btnGuardar">Guardar Mensaje</button>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="script.js"></script>
+
+
+
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+      
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyBVNQysEQse3mXOzrn95qKCew-4Y5bU_m0",
+          authDomain: "actividadbdatos-3e9ba.firebaseapp.com",
+          projectId: "actividadbdatos-3e9ba",
+          storageBucket: "actividadbdatos-3e9ba.firebasestorage.app",
+          messagingSenderId: "891278365050",
+          appId: "1:891278365050:web:b724f2270dfe62ff4d46c3"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+      </script>
+</body>
+</html>
