@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <title>Firebase con GitHub</title>
+  </head>
+  <body>
+    <h1>Conexión Firebase - GitHub</h1>
+    <button id="btnGuardar">Guardar Mensaje</button>
+
+    <!-- Cargar Firebase desde el CDN -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
+      import { getFirestore } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
+      const alejandro = { nombre: "Alejandro", edad: 20 };
+      // 🔥 Configuración de Firebase
+      const firebaseConfig = {
+        apiKey: "AIzaSyBVNQysEQse3mXOzrn95qKCew-4Y5bU_m0",
+        authDomain: "actividadbdatos-3e9ba.firebaseapp.com",
+        projectId: "actividadbdatos-3e9ba",
+        storageBucket: "actividadbdatos-3e9ba.appspot.com",
+        messagingSenderId: "891278365050",
+        appId: "1:891278365050:web:b724f2270dfe62ff4d46c3",
+      };
+
+      // Inicializar Firebase
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      // 🔹 Verificar conexión
+      console.log("✅ Firebase conectado correctamente:", app);
+      console.log("📂 Firestore inicializado:", db);
+    </script>
+  </body>
+</html>
