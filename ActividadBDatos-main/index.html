@@ -1,18 +1,30 @@
 <!DOCTYPE html>
 <html lang="es">
   <head>
-    <title>Firebase con GitHub</title>
+    <title>Estado de Ánimo y Canciones</title>
   </head>
   <body>
-    <h1>Conexión Firebase - GitHub</h1>
-    <button id="btnGuardar">Guardar Mensaje</button>
+    <h1>Selecciona tu estado de ánimo</h1>
+    <select id="estadoAnimo">
+      <option value="feliz">Feliz</option>
+      <option value="triste">Triste</option>
+      <option value="relajado">Relajado</option>
+      <option value="enojado">Enojado</option>
+    </select>
+    <button id="guardarEstado">Guardar Estado</button>
+    <h2>Canción Recomendada:</h2>
+    <p id="cancionRecomendada">
+      Selecciona un estado de ánimo para ver la canción recomendada.
+    </p>
 
-    <!-- Cargar Firebase desde el CDN -->
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
-      import { getFirestore } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
-      const alejandro = { nombre: "Alejandro", edad: 20 };
-      // 🔥 Configuración de Firebase
+      import {
+        getFirestore,
+        collection,
+        addDoc,
+      } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
+
       const firebaseConfig = {
         apiKey: "AIzaSyBVNQysEQse3mXOzrn95qKCew-4Y5bU_m0",
         authDomain: "actividadbdatos-3e9ba.firebaseapp.com",
@@ -22,13 +34,32 @@
         appId: "1:891278365050:web:b724f2270dfe62ff4d46c3",
       };
 
-      // Inicializar Firebase
       const app = initializeApp(firebaseConfig);
       const db = getFirestore(app);
 
-      // 🔹 Verificar conexión
-      console.log("✅ Firebase conectado correctamente:", app);
-      console.log("📂 Firestore inicializado:", db);
+      const canciones = {
+        feliz: "Happy - Pharrell Williams",
+        triste: "Someone Like You - Adele",
+        relajado: "Weightless - Marconi Union",
+        enojado: "Break Stuff - Limp Bizkit",
+      };
+
+      document
+        .getElementById("guardarEstado")
+        .addEventListener("click", async () => {
+          const estado = document.getElementById("estadoAnimo").value;
+          console.log("Estado seleccionado:", estado);
+
+          try {
+            await addDoc(collection(db, "estadosAnimo"), { estado });
+            document.getElementById(
+              "cancionRecomendada"
+            ).innerText = `Canción: ${canciones[estado]}`;
+            console.log("✅ Estado guardado en Firebase");
+          } catch (error) {
+            console.error("❌ Error al guardar en Firebase:", error);
+          }
+        });
     </script>
   </body>
 </html>
