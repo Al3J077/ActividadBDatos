@@ -35,6 +35,16 @@
     <button id="iniciarSesion">Iniciar Sesión</button>
     <button id="cerrarSesion" style="display: none">Cerrar Sesión</button>
 
+    <div
+      id="notificacion"
+      style="
+        display: none;
+        padding: 10px;
+        background: lightgreen;
+        margin-top: 10px;
+      "
+    ></div>
+
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
       import {
@@ -44,6 +54,8 @@
         onSnapshot,
         deleteDoc,
         doc,
+        query,
+        where,
       } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
       import {
         getAuth,
@@ -85,6 +97,15 @@
         },
       };
 
+      function mostrarNotificacion(mensaje) {
+        const notificacion = document.getElementById("notificacion");
+        notificacion.innerText = mensaje;
+        notificacion.style.display = "block";
+        setTimeout(() => {
+          notificacion.style.display = "none";
+        }, 3000);
+      }
+
       document
         .getElementById("guardarEstado")
         .addEventListener("click", async () => {
@@ -108,6 +129,7 @@
               estado,
               userId: user.uid,
             });
+            mostrarNotificacion("Estado de ánimo guardado correctamente.");
             document.getElementById("tituloCancion").style.display = "block";
             document.getElementById("cancionRecomendada").style.display =
               "block";
@@ -121,64 +143,41 @@
           }
         });
 
-      onSnapshot(collection(db, "estadosAnimo"), (snapshot) => {
+      function cargarEstadosUsuario(user) {
         const lista = document.getElementById("listaEstados");
         lista.innerHTML = "";
-        snapshot.forEach((docSnap) => {
-          const li = document.createElement("li");
-          li.textContent = `${docSnap.data().nombre} está ${
-            docSnap.data().estado
-          }`;
+        if (!user) return;
 
-          const btnEliminar = document.createElement("button");
-          btnEliminar.textContent = "Eliminar";
-          btnEliminar.addEventListener("click", async () => {
-            await deleteDoc(doc(db, "estadosAnimo", docSnap.id));
+        const q = query(
+          collection(db, "estadosAnimo"),
+          where("userId", "==", user.uid)
+        );
+        onSnapshot(q, (snapshot) => {
+          lista.innerHTML = "";
+          snapshot.forEach((docSnap) => {
+            const li = document.createElement("li");
+            li.textContent = `${docSnap.data().nombre} está ${
+              docSnap.data().estado
+            }`;
+
+            const btnEliminar = document.createElement("button");
+            btnEliminar.textContent = "Eliminar";
+            btnEliminar.addEventListener("click", async () => {
+              await deleteDoc(doc(db, "estadosAnimo", docSnap.id));
+              mostrarNotificacion("Estado eliminado correctamente.");
+            });
+
+            li.appendChild(btnEliminar);
+            lista.appendChild(li);
           });
-
-          li.appendChild(btnEliminar);
-          lista.appendChild(li);
         });
-      });
-
-      document
-        .getElementById("registrarse")
-        .addEventListener("click", async () => {
-          const email = document.getElementById("email").value;
-          const password = document.getElementById("password").value;
-          try {
-            await createUserWithEmailAndPassword(auth, email, password);
-            alert("✅ Registro exitoso");
-          } catch (error) {
-            alert(`❌ Error: ${error.message}`);
-          }
-        });
-
-      document
-        .getElementById("iniciarSesion")
-        .addEventListener("click", async () => {
-          const email = document.getElementById("email").value;
-          const password = document.getElementById("password").value;
-          try {
-            await signInWithEmailAndPassword(auth, email, password);
-            alert("✅ Sesión iniciada");
-          } catch (error) {
-            alert(`❌ Error: ${error.message}`);
-          }
-        });
-
-      document
-        .getElementById("cerrarSesion")
-        .addEventListener("click", async () => {
-          await signOut(auth);
-          alert("👋 Sesión cerrada");
-          document.getElementById("player").style.display = "none";
-        });
+      }
 
       onAuthStateChanged(auth, (user) => {
         document.getElementById("cerrarSesion").style.display = user
           ? "block"
           : "none";
+        cargarEstadosUsuario(user);
       });
     </script>
   </body>
