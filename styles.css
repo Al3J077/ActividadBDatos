@@ -1,0 +1,135 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #121212; /* Fondo oscuro estilo Spotify */
+    color: #fff;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+  }
+  
+  h1, h2 {
+    font-weight: bold;
+  }
+  
+  h1 {
+    /* Color  y tamaño */
+    color: #1DB954;
+    margin-top: 20px;
+    font-size: 2.5em;
+  }
+  
+  input, select, button {
+    /* Estilos para los campos de entrada, selectores y botones */
+    background-color: #282828;
+    border: none;
+    padding: 12px;
+    color: white;
+    border-radius: 20px;
+    margin: 10px;
+    font-size: 16px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+  }
+  
+  button {
+    /* Efectos en botones */
+    cursor: pointer;
+    transition: 0.3s;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  
+  button:hover {
+    /* Efecto hover en botones */
+    background-color: #1DB954;
+    color: black;
+    transform: scale(1.05);
+  }
+  
+  #listaEstados {
+    /* Lista de estados guardados sin viñetas y con espacio */
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+  }
+  
+  #listaEstados li {
+    /* Estilos para cada estado guardado */
+    background-color: #181818;
+    margin: 5px auto;
+    padding: 15px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 400px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    transition: 0.3s;
+  }
+  
+  #listaEstados li:hover {
+    /* Cambio de color y tamaño al pasar el mouse */
+    background-color: #1DB954;
+    color: black;
+    transform: scale(1.05);
+  }
+  
+  iframe {
+    /* Estilo para el reproductor de video */
+    border-radius: 15px;
+    margin-top: 20px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+  }
+  
+  button.delete {
+    /* Botón de eliminar con estilo llamativo */
+    background-color: #d32f2f;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 15px;
+    font-size: 14px;
+  }
+  
+  button.delete:hover {
+    /* Efecto hover en el botón de eliminar */
+    background-color: #ff1744;
+    transform: scale(1.1);
+  }
+  
+  @media (max-width: 600px) {
+    /* Adaptación para pantallas pequeñas */
+    input, select, button {
+      width: 90%;
+    }
+  
+    h1 {
+      font-size: 2em;
+    }
+  
+    #listaEstados li {
+      flex-direction: column;
+      text-align: center;
+    }
+  }
+  #listaCanciones {
+    margin-top: 20px;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    background: #282828;
+    padding: 15px;
+    margin: 10px auto;
+    width: 50%;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+audio {
+    margin-left: 20px;
+}
