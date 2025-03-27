@@ -1,38 +1,185 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <title>Firebase con GitHub</title>
-</head>
-<body>
-    <h1>Conexión Firebase - GitHub</h1>
-    <button id="btnGuardar">Guardar Mensaje</button>
+  <head>
+    <title>Estado de Ánimo y Canciones</title>
+  </head>
+  <body>
+    <h1>Selecciona tu estado de ánimo</h1>
+    <input type="text" id="nombreUsuario" placeholder="Ingresa tu nombre" />
+    <select id="estadoAnimo">
+      <option value="feliz">Feliz</option>
+      <option value="triste">Triste</option>
+      <option value="relajado">Relajado</option>
+      <option value="enojado">Enojado</option>
+    </select>
+    <button id="guardarEstado">Guardar Estado</button>
 
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
-    <script src="firebase-config.js"></script>
-    <script src="script.js"></script>
+    <h2 id="tituloCancion" style="display: none">Canción Recomendada:</h2>
+    <p id="cancionRecomendada" style="display: none"></p>
+    <iframe
+      id="player"
+      style="display: none"
+      width="560"
+      height="315"
+      frameborder="0"
+      allowfullscreen
+    ></iframe>
 
+    <h2>Últimos estados guardados</h2>
+    <ul id="listaEstados"></ul>
 
-
+    <h2>Autenticación</h2>
+    <input type="email" id="email" placeholder="Correo electrónico" />
+    <input type="password" id="password" placeholder="Contraseña" />
+    <button id="registrarse">Registrarse</button>
+    <button id="iniciarSesion">Iniciar Sesión</button>
+    <button id="cerrarSesion" style="display: none">Cerrar Sesión</button>
 
     <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
-        // TODO: Add SDKs for Firebase products that you want to use
-        // https://firebase.google.com/docs/web/setup#available-libraries
-      
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-          apiKey: "AIzaSyBVNQysEQse3mXOzrn95qKCew-4Y5bU_m0",
-          authDomain: "actividadbdatos-3e9ba.firebaseapp.com",
-          projectId: "actividadbdatos-3e9ba",
-          storageBucket: "actividadbdatos-3e9ba.firebasestorage.app",
-          messagingSenderId: "891278365050",
-          appId: "1:891278365050:web:b724f2270dfe62ff4d46c3"
-        };
-      
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-      </script>
-</body>
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
+      import {
+        getFirestore,
+        collection,
+        addDoc,
+        onSnapshot,
+        deleteDoc,
+        doc,
+      } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
+      import {
+        getAuth,
+        createUserWithEmailAndPassword,
+        signInWithEmailAndPassword,
+        signOut,
+        onAuthStateChanged,
+      } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyBVNQysEQse3mXOzrn95qKCew-4Y5bU_m0",
+        authDomain: "actividadbdatos-3e9ba.firebaseapp.com",
+        projectId: "actividadbdatos-3e9ba",
+        storageBucket: "actividadbdatos-3e9ba.appspot.com",
+        messagingSenderId: "891278365050",
+        appId: "1:891278365050:web:b724f2270dfe62ff4d46c3",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      const auth = getAuth(app);
+
+      const canciones = {
+        feliz: {
+          nombre: "Happy - Pharrell Williams",
+          url: "https://www.youtube.com/embed/ZbZSe6N_BXs",
+        },
+        triste: {
+          nombre: "Someone Like You - Adele",
+          url: "https://www.youtube.com/embed/hLQl3WQQoQ0",
+        },
+        relajado: {
+          nombre: "Weightless - Marconi Union",
+          url: "https://www.youtube.com/embed/UfcAVejslrU",
+        },
+        enojado: {
+          nombre: "Break Stuff - Limp Bizkit",
+          url: "https://www.youtube.com/embed/ZpUYjpKg9KY",
+        },
+      };
+
+      document
+        .getElementById("guardarEstado")
+        .addEventListener("click", async () => {
+          const nombre = document.getElementById("nombreUsuario").value;
+          const estado = document.getElementById("estadoAnimo").value;
+          const user = auth.currentUser;
+
+          if (!user) {
+            alert("Debes iniciar sesión para guardar tu estado de ánimo.");
+            return;
+          }
+
+          if (!nombre) {
+            alert("Por favor, ingresa tu nombre.");
+            return;
+          }
+
+          try {
+            await addDoc(collection(db, "estadosAnimo"), {
+              nombre,
+              estado,
+              userId: user.uid,
+            });
+            document.getElementById("tituloCancion").style.display = "block";
+            document.getElementById("cancionRecomendada").style.display =
+              "block";
+            document.getElementById(
+              "cancionRecomendada"
+            ).innerText = `Canción: ${canciones[estado].nombre}`;
+            document.getElementById("player").style.display = "block";
+            document.getElementById("player").src = canciones[estado].url;
+          } catch (error) {
+            console.error("❌ Error al guardar en Firebase:", error);
+          }
+        });
+
+      onSnapshot(collection(db, "estadosAnimo"), (snapshot) => {
+        const lista = document.getElementById("listaEstados");
+        lista.innerHTML = "";
+        snapshot.forEach((docSnap) => {
+          const li = document.createElement("li");
+          li.textContent = `${docSnap.data().nombre} está ${
+            docSnap.data().estado
+          }`;
+
+          const btnEliminar = document.createElement("button");
+          btnEliminar.textContent = "Eliminar";
+          btnEliminar.addEventListener("click", async () => {
+            await deleteDoc(doc(db, "estadosAnimo", docSnap.id));
+          });
+
+          li.appendChild(btnEliminar);
+          lista.appendChild(li);
+        });
+      });
+
+      document
+        .getElementById("registrarse")
+        .addEventListener("click", async () => {
+          const email = document.getElementById("email").value;
+          const password = document.getElementById("password").value;
+          try {
+            await createUserWithEmailAndPassword(auth, email, password);
+            alert("✅ Registro exitoso");
+          } catch (error) {
+            alert(`❌ Error: ${error.message}`);
+          }
+        });
+
+      document
+        .getElementById("iniciarSesion")
+        .addEventListener("click", async () => {
+          const email = document.getElementById("email").value;
+          const password = document.getElementById("password").value;
+          try {
+            await signInWithEmailAndPassword(auth, email, password);
+            alert("✅ Sesión iniciada");
+          } catch (error) {
+            alert(`❌ Error: ${error.message}`);
+          }
+        });
+
+      document
+        .getElementById("cerrarSesion")
+        .addEventListener("click", async () => {
+          await signOut(auth);
+          alert("👋 Sesión cerrada");
+          document.getElementById("player").style.display = "none";
+        });
+
+      onAuthStateChanged(auth, (user) => {
+        document.getElementById("cerrarSesion").style.display = user
+          ? "block"
+          : "none";
+      });
+    </script>
+  </body>
 </html>
