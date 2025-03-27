@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Plataforma de música estilo Spotify con selección de géneros y listas de canciones">
+    <meta name="author" content="Tu Nombre">
     <title>Spotify Style Music</title>
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -13,13 +15,16 @@
     <main>
         <section id="generos">
             <h2>Selecciona un género</h2>
+            <label for="seleccionGenero">Elige un género musical:</label>
             <select id="seleccionGenero">
                 <option value="pop">Pop</option>
                 <option value="rock">Rock</option>
                 <option value="electro">Electrónica</option>
                 <option value="jazz">Jazz</option>
             </select>
-            <button id="mostrarCanciones">Mostrar Canciones</button>
+            <div>
+                <button id="mostrarCanciones">Mostrar Canciones</button>
+            </div>
         </section>
         <section id="listaCanciones">
             <h2>Lista de Canciones</h2>

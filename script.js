@@ -1,31 +1,41 @@
-document.getElementById("mostrarCanciones").addEventListener("click", function() {
+document.getElementById("mostrarCanciones").addEventListener("click", function () {
     const genero = document.getElementById("seleccionGenero").value;
     const listaCanciones = document.getElementById("canciones");
-    listaCanciones.innerHTML = "";
-    
+    listaCanciones.innerHTML = ""; // Limpiar lista antes de actualizar
+
     const canciones = {
         pop: [
-            { titulo: "Blinding Lights",             artista: "The Weeknd", 
-            src: "The Weeknd - Blinding Lights (Official Audio) - TheWeekndVEVO.mp3" },
-            { titulo: "Levitating", artista: "Dua Lipa", src: "Dua Lipa - Levitating (Official Lyrics Video) - Dua Lipa.mp3" }
+            { titulo: "Blinding Lights", artista: "The Weeknd", src: "TheWeeknd_BlindingLights.mp3" },
+            { titulo: "Levitating", artista: "Dua Lipa", src: "DuaLipa_Levitating.mp3" }
         ],
         rock: [
-            { titulo: "Bohemian Rhapsody", artista: "Queen", src: "Queen – Bohemian Rhapsody (Lyrics) - The Greatest Songs.mp3" },
-            { titulo: "Smells Like Teen Spirit", artista: "Nirvana", src: "Nirvana - Smells Like Teen Spirit [Nevermind] [HQ Sound] - Lucatone18.mp3" }
+            { titulo: "Bohemian Rhapsody", artista: "Queen", src: "Queen_BohemianRhapsody.mp3" },
+            { titulo: "Smells Like Teen Spirit", artista: "Nirvana", src: "Nirvana_SmellsLikeTeenSpirit.mp3" }
         ],
         electro: [
-            { titulo: "Titanium", artista: "David Guetta", src: "David Guetta - Titanium (Lyrics) ft. Sia - 7clouds.mp3" },
-            { titulo: "Animals", artista: "Martin Garrix", src: "Maroon 5 - Animals (Lyrics) - 7clouds.mp3" }
+            { titulo: "Titanium", artista: "David Guetta", src: "DavidGuetta_Titanium.mp3" },
+            { titulo: "Animals", artista: "Martin Garrix", src: "MartinGarrix_Animals.mp3" } // Corrección del artista
         ],
         jazz: [
-            { titulo: "Take Five", artista: "Dave Brubeck", src: "Dave Brubeck - Take Five - buckinny.mp3" },
-            { titulo: "So What", artista: "Miles Davis", src: "Miles Davis - So What (Official Audio) - MilesDavisVEVO.mp3" }
+            { titulo: "Take Five", artista: "Dave Brubeck", src: "DaveBrubeck_TakeFive.mp3" },
+            { titulo: "So What", artista: "Miles Davis", src: "MilesDavis_SoWhat.mp3" }
         ]
     };
 
+    // Verificar si el género seleccionado existe
+    if (!canciones[genero]) {
+        alert("Género no encontrado, selecciona uno válido.");
+        return;
+    }
+
+    // Generar la lista de canciones
     canciones[genero].forEach(cancion => {
         const li = document.createElement("li");
-        li.innerHTML = `${cancion.titulo} - ${cancion.artista} <audio controls src="${cancion.src}"></audio>`;
+        li.innerHTML = `<strong>${cancion.titulo}</strong> - ${cancion.artista} 
+                        <audio controls>
+                            <source src="${cancion.src}" type="audio/mpeg">
+                            Tu navegador no soporta el elemento de audio.
+                        </audio>`;
         listaCanciones.appendChild(li);
     });
 });
